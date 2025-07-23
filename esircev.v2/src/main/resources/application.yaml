@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: store
+  datasource:
+    url: jdbc:mysql://localhost:3306/dnrn_esircev_db?createDatabaseIfNotExist=true
+    username: root
+    password: e1000s0n2
+  jpa:
+    show-sql: true
