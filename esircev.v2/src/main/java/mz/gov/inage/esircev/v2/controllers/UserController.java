@@ -1,6 +1,7 @@
 package mz.gov.inage.esircev.v2.controllers;
 
 import lombok.AllArgsConstructor;
+import mz.gov.inage.esircev.v2.dtos.RegisterUserRequest;
 import mz.gov.inage.esircev.v2.dtos.UserDto;
 import mz.gov.inage.esircev.v2.entities.User;
 import mz.gov.inage.esircev.v2.mappers.UserMapper;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Set;
@@ -23,8 +25,11 @@ public class UserController {
 
     @GetMapping
     public Iterable<UserDto> getAllUsers(
+            @RequestHeader(required = false, name = "x-auth-token") String authToken,
             @RequestParam(required = false, defaultValue = "", name = "sort") String sort
     ){
+        System.out.println(authToken);
+
         if(!Set.of("name", "email").contains(sort))
             sort = "name";
 
@@ -45,5 +50,17 @@ public class UserController {
         //return new ResponseEntity<>(user, HttpStatus.OK);
         //Melhor abordagem
         return ResponseEntity.ok(userMapper.toDto(user));
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDto> createUser(
+            @RequestBody RegisterUserRequest request,
+            UriComponentsBuilder uriBuilder){
+        var user = userMapper.toEntity(request);
+        userRepository.save(user);
+
+        var userDto = userMapper.toDto(user);
+        var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+        return ResponseEntity.created(uri).body(userDto);
     }
 }
