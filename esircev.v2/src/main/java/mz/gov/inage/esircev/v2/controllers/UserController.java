@@ -1,5 +1,6 @@
 package mz.gov.inage.esircev.v2.controllers;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import mz.gov.inage.esircev.v2.dtos.RegisterUserRequest;
 import mz.gov.inage.esircev.v2.dtos.UpdateUserRequest;
@@ -10,10 +11,13 @@ import mz.gov.inage.esircev.v2.repositories.UserRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -55,7 +59,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> createUser(
-            @RequestBody RegisterUserRequest request,
+            @Valid @RequestBody RegisterUserRequest request,
             UriComponentsBuilder uriBuilder){
         var user = userMapper.toEntity(request);
         userRepository.save(user);
