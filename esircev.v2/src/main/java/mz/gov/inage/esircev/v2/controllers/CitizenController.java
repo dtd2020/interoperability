@@ -1,10 +1,10 @@
 package mz.gov.inage.esircev.v2.controllers;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import mz.gov.inage.esircev.v2.dtos.CitizenDto;
 import mz.gov.inage.esircev.v2.dtos.RegisterCitizenRequest;
 import mz.gov.inage.esircev.v2.dtos.UpdateCitizenRequest;
-import mz.gov.inage.esircev.v2.entities.Citizen;
 import mz.gov.inage.esircev.v2.mappers.CitizenMapper;
 import mz.gov.inage.esircev.v2.repositories.CitizenRepository;
 import org.springframework.data.domain.Sort;
@@ -48,8 +48,8 @@ public class CitizenController {
     }
 
     @PostMapping
-    public ResponseEntity<CitizenDto> createCitizen(
-            @RequestBody RegisterCitizenRequest request,
+    public ResponseEntity<CitizenDto> registerCitizen(
+            @Valid @RequestBody RegisterCitizenRequest request,
             UriComponentsBuilder uriBuilder
     ){
         var citizen = citizenMapper.toEntity(request);
@@ -63,7 +63,7 @@ public class CitizenController {
     @PutMapping("/{id}")
     public ResponseEntity<CitizenDto> updateCitizen(
             @PathVariable(name = "id") Long id,
-            @RequestBody UpdateCitizenRequest request
+            @Valid @RequestBody UpdateCitizenRequest request
             ){
 
         var citizen = citizenRepository.findById(id).orElse(null);
