@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -48,10 +49,17 @@ public class CitizenController {
     }
 
     @PostMapping
-    public ResponseEntity<CitizenDto> registerCitizen(
+    public ResponseEntity<?> registerCitizen(
             @Valid @RequestBody RegisterCitizenRequest request,
             UriComponentsBuilder uriBuilder
     ){
+        if(citizenRepository.existsByNuic(request.getNuic())){
+            return
+                    ResponseEntity.badRequest().body(
+                            Map.of("nuic", "NUIC já registado.")
+                    );
+        }
+
         var citizen = citizenMapper.toEntity(request);
         citizenRepository.save(citizen);
 

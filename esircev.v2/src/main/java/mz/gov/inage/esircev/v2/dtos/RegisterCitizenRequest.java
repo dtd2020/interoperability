@@ -16,7 +16,7 @@ public class RegisterCitizenRequest {
     private String lastName;
 
     @NotBlank(message = "Por favor, preencha este campo.")
-    @Pattern(regexp = ".{12}", message = "O NUIC deve conter exactamente 12 caracteres.")
+    @Pattern(regexp = ".{9}", message = "O NUIC deve conter exactamente 9 caracteres.")
     private String nuic;
 
     @NotBlank(message = "Por favor, preencha este campo.")

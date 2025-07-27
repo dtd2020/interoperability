@@ -16,8 +16,8 @@ public class UpdateCitizenRequest {
     private String lastName;
 
     @NotBlank(message = "Por favor, preencha este campo.")
-    //@Size(min = 12, max = 12, message = "O NUIC deve conter exactamente 12 caracteres.")
-    @ExactLength(12)
+    //@Size(min = 9, max = 9, message = "O NUIC deve conter exactamente 12 caracteres.")
+    @ExactLength(9)
     private String nuic;
 
     @NotBlank(message = "Por favor, preencha este campo.")
