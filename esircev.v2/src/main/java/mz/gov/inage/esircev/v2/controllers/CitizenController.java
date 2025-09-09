@@ -1,5 +1,8 @@
 package mz.gov.inage.esircev.v2.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import mz.gov.inage.esircev.v2.dtos.CitizenDto;
@@ -18,12 +21,14 @@ import java.util.Set;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/citizens")
+@Tag(name = "Citizens", description = "Gestão de Cidadãos | Mock-eSIRCEV | INAGE, IP")
 public class CitizenController {
 
     private final CitizenRepository citizenRepository;
     private final CitizenMapper citizenMapper;
 
     @GetMapping
+    @Operation(summary = "Retorna todos cidadãos registados.")
     public Iterable<CitizenDto> getAllCitizens(
             @RequestParam(required = false, defaultValue = "", name = "sort") String sort
     ){
@@ -37,7 +42,11 @@ public class CitizenController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CitizenDto> getCitizenById(@PathVariable Long id){
+    @Operation(summary = "Retorna cidadão pelo ID.")
+    public ResponseEntity<CitizenDto> getCitizenById(
+            @Parameter(description = "ID do cidadão.")
+            @PathVariable Long id
+    ){
 
         var citizen = citizenRepository.findById(id).orElse(null);
 
@@ -49,6 +58,7 @@ public class CitizenController {
     }
 
     @PostMapping
+    @Operation(summary = "Regista um cidadão.")
     public ResponseEntity<?> registerCitizen(
             @Valid @RequestBody RegisterCitizenRequest request,
             UriComponentsBuilder uriBuilder
@@ -68,8 +78,10 @@ public class CitizenController {
         return ResponseEntity.created(uri).body(citizenDto);
     }
 
+    @Operation(summary = "Actualiza um cidadão.")
     @PutMapping("/{id}")
     public ResponseEntity<CitizenDto> updateCitizen(
+            @Parameter(description = "ID do cidadão.")
             @PathVariable(name = "id") Long id,
             @Valid @RequestBody UpdateCitizenRequest request
             ){
@@ -85,8 +97,10 @@ public class CitizenController {
         return ResponseEntity.ok(citizenMapper.toDto(citizen));
     }
 
+    @Operation(summary = "Remove um cidadão.")
     @DeleteMapping("/{id}")
     public ResponseEntity<CitizenDto> deleteCitizen(
+            @Parameter(description = "ID do cidadão.")
             @PathVariable(name = "id") Long id)
     {
         var citizen = citizenRepository.findById(id).orElse(null);

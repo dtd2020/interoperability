@@ -1,5 +1,8 @@
 package mz.gov.inage.esircev.v2.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import mz.gov.inage.esircev.v2.dtos.RegisterUserRequest;
@@ -8,6 +11,7 @@ import mz.gov.inage.esircev.v2.dtos.UserDto;
 import mz.gov.inage.esircev.v2.mappers.UserMapper;
 import mz.gov.inage.esircev.v2.repositories.UserRepository;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -18,12 +22,14 @@ import java.util.Set;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/users")
+@Tag(name = "Users", description = "Gestão de utilizadors | Mock-eSIRCEV | INAGE, IP")
 public class UserController {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
     @GetMapping
+    @Operation(summary = "Retorna todos utilizadores registados")
     public Iterable<UserDto> getAllUsers(
             @RequestHeader(required = false, name = "x-auth-token") String authToken,
             @RequestParam(required = false, defaultValue = "", name = "sort") String sort
@@ -40,7 +46,11 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long id){
+    @Operation(summary = "Retorna um utilizador pelo ID.")
+    public ResponseEntity<UserDto> getUser(
+            @Parameter(description = "ID do utilizador.")
+            @PathVariable Long id
+    ){
         var user = userRepository.findById(id).orElse(null);
         if(user == null){
             //return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -53,6 +63,7 @@ public class UserController {
     }
 
     @PostMapping
+    @Operation(summary = "Regista um utilizador")
     public ResponseEntity<?> registerUser(
             @Valid @RequestBody RegisterUserRequest request,
             UriComponentsBuilder uriBuilder){
@@ -72,7 +83,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Actualiza um utilizador.")
     public ResponseEntity<UserDto> updateUser(
+            @Parameter(description = "ID do utilizador.")
             @PathVariable(name = "id") Long id,
             @Valid @RequestBody UpdateUserRequest request){
 
@@ -88,7 +101,11 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id){
+    @Operation(summary = "Remove um utilizador.")
+    public ResponseEntity<Void> deleteUser(
+            @Parameter(description = "ID do utilizador.")
+            @PathVariable Long id
+    ){
         var user = userRepository.findById(id).orElse(null);
 
         if(user == null)
