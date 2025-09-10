@@ -29,7 +29,7 @@ public class UserController {
     private final UserMapper userMapper;
 
     @GetMapping
-    @Operation(summary = "Retorna todos utilizadores registados")
+    @Operation(summary = "Retorna todos utilizadores registados.")
     public Iterable<UserDto> getAllUsers(
             @RequestHeader(required = false, name = "x-auth-token") String authToken,
             @RequestParam(required = false, defaultValue = "", name = "sort") String sort
@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping
-    @Operation(summary = "Regista um utilizador")
+    @Operation(summary = "Regista um utilizador.")
     public ResponseEntity<?> registerUser(
             @Valid @RequestBody RegisterUserRequest request,
             UriComponentsBuilder uriBuilder){
